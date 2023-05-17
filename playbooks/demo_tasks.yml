@@ -1,0 +1,32 @@
+---
+- hosts: linux10
+  become: true
+  tasks:
+  - name: instalamos apache
+    package:
+      name: httpd
+      state: present
+  - name: iniciamos httpd y dejamos persistente
+    service: 
+      name: httpd
+      state: started
+      enabled: yes
+    tags: config
+  - name: creamos pagina de bienvenida
+    copy:
+      dest: /var/www/html/index.html
+      content: |
+        <html>
+        <body>
+        <h1>it works!</h1>
+        Que Bonito!
+        Que Bonito!
+        Que Bonito!
+        </body>
+        </html>
+      tags: config
+    - name: desinstalo apache
+      package: httpd
+      state: absent
+    tags: [ unistall, never]
+
